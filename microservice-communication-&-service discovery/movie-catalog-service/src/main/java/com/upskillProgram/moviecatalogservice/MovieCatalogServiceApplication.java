@@ -3,11 +3,14 @@ package com.upskillProgram.moviecatalogservice;
 import io.micrometer.observation.ObservationRegistry;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
+import org.springframework.cloud.netflix.hystrix.dashboard.EnableHystrixDashboard;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.client.reactive.ClientHttpConnector;
 import org.springframework.http.codec.ClientCodecConfigurer;
 import org.springframework.util.MultiValueMap;
@@ -24,11 +27,15 @@ import java.util.function.Predicate;
 
 @SpringBootApplication
 @EnableEurekaClient
+@EnableCircuitBreaker
+//@EnableHystrixDashboard
 public class MovieCatalogServiceApplication {
 
 	@Bean
 	@LoadBalanced
 	public RestTemplate getRestTemplate(){
+		//HttpComponentsClientHttpRequestFactory httpComponentsClientHttpRequestFactory=new HttpComponentsClientHttpRequestFactory();
+		//httpComponentsClientHttpRequestFactory.setConnectTimeout(3000);
 		return new RestTemplate();
 
 	}
@@ -36,15 +43,6 @@ public class MovieCatalogServiceApplication {
 	public WebClient.Builder getWebClientBuilder() {
 		return  WebClient.builder();
 	}
-
-
-
-
-
-
-
-
-
 
 	public static void main(String[] args) {
 		SpringApplication.run(MovieCatalogServiceApplication.class, args);
